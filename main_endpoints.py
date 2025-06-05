@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import os
-from helper_functions import upsert_steel_grade, upsert_product_group, detect_month_columns, process_production_data, save_to_steel_grade_production, process_product_group_data, save_product_group_monthly
+from helper_functions import  get_steel_prices, detect_month_columns, process_production_data, save_to_steel_grade_production, process_product_group_data, save_product_group_monthly
 import pandas as pd
 from supabase_client import supabase_client
 from datetime import datetime
@@ -17,7 +17,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 tons_per_heat = 100.0
 
 
-#  ---- endpoint: upload steel_grade_production
+#  endpoint: upload steel_grade_production
 @app.route("/upload/steel_grades", methods=["POST"])
 def upload_steel_grades():
     """
@@ -26,8 +26,6 @@ def upload_steel_grades():
     file = request.files.get("file")
     if not file:
         return jsonify({"error": "No file provided"}), 400
-
-    # Save original Excel file
     excel_path = os.path.join(UPLOAD_FOLDER, "og_steel_grade_production.xlsx")
     file.save(excel_path)
 
@@ -43,7 +41,7 @@ def upload_steel_grades():
             "columns_found": df.columns.tolist()
         }), 400
     
-    # get the month columns 
+    # get the month columns gi
     month_cols = detect_month_columns(df)
     print("Month columns detected:", month_cols)
     
@@ -69,7 +67,7 @@ def upload_steel_grades():
         "records_processed": len(records)
     }), 200
 
-# ─── End point: Upload product_groups_monthly.xlsx 
+# ─── Endpoint: Upload product_groups_monthly.xlsx 
 # this is the main input for product groups
 @app.route("/upload/product_groups", methods=["POST"])
 def upload_product_groups():
@@ -119,7 +117,7 @@ def upload_product_groups():
 
 
 
-# ─── Endpoint: Forecast September Production ──────────────────────────────────
+# ───  forecast sept production 
 @app.route("/forecast/september", methods=["GET"])
 def forecast_september():
     """
@@ -131,7 +129,7 @@ def forecast_september():
       - forecast_tons = avg_tons
       - heats = round(forecast_tons / 100)
     """
-    number_months = 3  # number of months to average
+    number_months = 3  # number of months to average. change if you have more data
 
     # get grades and group names
     all_grades_resp = supabase_client.table("steel_grades").select("id, name, product_group_id").execute()
@@ -169,12 +167,14 @@ def forecast_september():
         avg_tons = sum(tons_list) / len(tons_list)
         print(f"Grade: {grade_name}, Avg Tons: {avg_tons}")
         forecast_tons = avg_tons
+        estimated_price = get_steel_prices(grade_name) * forecast_tons
         forecast_heats = math.ceil(forecast_tons / tons_per_heat) #rounding up
         results.append({
             "steel_grade": grade_name,
             "steel_group": group_name,  
             "heats": forecast_heats,
             "tons": forecast_tons,
+            "estimated_price": estimated_price,
         })
         
         save_path = os.path.join(UPLOAD_FOLDER, "september_forecast.json")
@@ -183,7 +183,6 @@ def forecast_september():
         
     return jsonify(results), 200
 
-# ─── Run the Flask App ─────────────────────────────────────────────────────────
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
 

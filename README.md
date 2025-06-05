@@ -1,4 +1,11 @@
 # FDM-tech-assessment
+By Allen Li 2025. Supabase project URL and public anon key are in the .env. I trust you guys.
+
+When you guys are reading this, the backend will be fully popualated with data from my testing rounds. When the program has the populate (from empty), it will 
+run a little slower obviously. 
+
+If you guys want me to clear the DB then run, I can do that easily. Or a script can be made using the credentials to the supabase. 
+
 
 Created a supabase database (postgres) with tables:
 - product_group_monthly
@@ -9,13 +16,12 @@ Created a supabase database (postgres) with tables:
 Endpoints:
 - /upload/steel_grades
 - /upload/product_groups
-- /forecast/september
+- /forecast/september (returns estimated price, heats, steeL_grade, steel_group, and tons)
 
 It seemed to be that the "daily_charge_schedule" wasn't really needed or have enough entires to be relevant to predict production to the day and hour granularity. If there were daily production schedules for even just one month, the hour-minute production averages could be calculated and hence planned out. 
 
-Projected heats will round up to the nearest heat.
-
-All files are saved locally as either csv (input files) or json (output for scrapchef)
+- Projected heats will round up to the nearest heat.
+- All files are saved locally as either csv (input files) or json (output for scrapchef). For fun I added average price per ton mapping for different steel classes to return a price point per forecasted steel_grade. 
 
 
 Potential Flow: 

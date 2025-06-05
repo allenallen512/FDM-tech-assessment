@@ -124,8 +124,8 @@ def process_product_group_data(df, month_cols):
 def save_product_group_monthly(records, heat_tonnage=100.0):
     """Save product group monthly records to database."""
     for record in records:
-        # Get product group ID
-        pg_id = upsert_product_group(record['ProductGroup'])
+        
+        prod_group_id = upsert_product_group(record['ProductGroup'])
         
         # Calculate tons from heats
         heats = float(record['Heats'])
@@ -133,13 +133,38 @@ def save_product_group_monthly(records, heat_tonnage=100.0):
         year_month = str(record['MonthCol']).strip()
         
     
-        # Upsert into product_group_monthly
+        # upsert
         supabase_client.table("product_group_monthly")\
             .upsert({
                 "year_month": year_month,
-                "product_group_id": pg_id,
+                "product_group_id": prod_group_id,
                 "tons": tons,
                 "heats": heats
             },
             on_conflict="year_month,product_group_id")\
             .execute()
+            
+            
+            
+def get_steel_prices(grade_name):
+    # made up steel prices. Price per ton in USD
+    steel_prices = {
+        "B500A": 720,
+        "B500B": 735,
+        "B500C": 750,
+        "A36": 780,
+        "A5888": 820,
+        "GR50": 805, 
+        "44W": 790,
+        "50W": 800,
+        "55W": 815,
+        "60W": 830,
+        "S235JR": 890,
+        "S355J": 910,
+        "C35": 920,
+        "C40": 930,
+        "A53/A543": 980,
+        "A53/C591": 1050,
+    }
+    
+    return steel_prices.get(grade_name, 800)  # default $800/ton
