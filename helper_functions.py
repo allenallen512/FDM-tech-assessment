@@ -86,6 +86,7 @@ def save_to_steel_grade_production(records):
         # insert prod group if it doesn't exist
         pg_id = upsert_product_group(record['ProductGroup'])
         # insert steel grade if it doesn't exist, and product group
+        #this prints out "the result from steel_grades is" and the result
         grade_id = upsert_steel_grade(record['SteelGrade'], pg_id)
         
         supabase_client.table("steel_grade_production")\

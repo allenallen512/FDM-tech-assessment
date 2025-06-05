@@ -1,0 +1,86 @@
+[
+  {
+    "steel_grade": "B500A",
+    "steel_group": "Rebar",
+    "heats": 90,
+    "tons": 8981.0
+  },
+  {
+    "steel_grade": "B500B",
+    "steel_group": "Rebar",
+    "heats": 110,
+    "tons": 10910.666666666666
+  },
+  {
+    "steel_grade": "B500C",
+    "steel_group": "Rebar",
+    "heats": 35,
+    "tons": 3474.6666666666665
+  },
+  {
+    "steel_grade": "A36",
+    "steel_group": "MBQ",
+    "heats": 3,
+    "tons": 200.5
+  },
+  {
+    "steel_grade": "A5888",
+    "steel_group": "MBQ",
+    "heats": 6,
+    "tons": 512.0
+  },
+  {
+    "steel_grade": "GR50",
+    "steel_group": "MBQ",
+    "heats": 10,
+    "tons": 935.0
+  },
+  {
+    "steel_grade": "44W",
+    "steel_group": "MBQ",
+    "heats": 32,
+    "tons": 3158.0
+  },
+  {
+    "steel_grade": "50W",
+    "steel_group": "MBQ",
+    "heats": 31,
+    "tons": 3039.0
+  },
+  {
+    "steel_grade": "55W",
+    "steel_group": "MBQ",
+    "heats": 4,
+    "tons": 333.0
+  },
+  {
+    "steel_grade": "S235JR",
+    "steel_group": "SBQ",
+    "heats": 1,
+    "tons": 99.0
+  },
+  {
+    "steel_grade": "S355J",
+    "steel_group": "SBQ",
+    "heats": 2,
+    "tons": 102.0
+  },
+  {
+    "steel_grade": "C40",
+    "steel_group": "SBQ",
+    "heats": 7,
+    "tons": 605.3333333333334
+  },
+  {
+    "steel_grade": "A53/A543",
+    "steel_group": "CHQ",
+    "heats": 16,
+    "tons": 1555.0
+  },
+  {
+    "steel_grade": "A53/C591",
+    "steel_group": "CHQ",
+    "heats": 15,
+    "tons": 1424.5
+  }
+]

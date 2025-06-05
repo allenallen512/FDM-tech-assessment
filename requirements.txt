@@ -1,5 +1,8 @@
-Flask
+flask
 pandas
 openpyxl
 supabase
 python-dotenv
+re
+datetime
+json
