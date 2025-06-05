@@ -35,17 +35,18 @@ Projected heats will round up to the nearest heat.
 
 
 
-to run: '''python main_endpoints.py'''
+to run: <pre>'''python main_endpoints.py'''</pre>
 to test with file stored locally:
-'''
+
+<pre>'''
 curl -X POST -F "file=@/Users/allenli/Desktop/Projects/FDM-tech-assessment/data/product_groups_monthly.xlsx" \
   http://127.0.0.1:5000/upload/product_groups
-'''
+'''</pre>
 
 to get september forecast:
-'''
+<pre>'''
 curl http://127.0.0.1:5000/forecast/september
-'''
+'''</pre>
 
 Potential Flow: 
 1. upload "steel_grade_production" this will populate both steel grades and and groups table if they do not already exist
