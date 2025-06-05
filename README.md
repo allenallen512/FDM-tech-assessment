@@ -21,6 +21,34 @@ The API should:
 
 Feel free to ask any clarifying questions at any point.
 
-My work:
-to run: python main_endpoints.py
+---------------------------------------------Solution----------------------------------------
+
+Created a supabase database (postgres) with tables:
+- product_group_monthly
+- product_groups
+- steel_grade_production
+- steel_grades
+
+It seemed to be that the "daily_charge_schedule" wasn't really needed or have enough entires to be relevant to predict production to the day and hour granularity. If there were daily production schedules for even just one month, the hour-minute production averages could be calculated and hence planned out. 
+
+Projected heats will round up to the nearest heat.
+
+
+
+to run: '''python main_endpoints.py'''
+to test with file stored locally:
+'''
+curl -X POST -F "file=@/Users/allenli/Desktop/Projects/FDM-tech-assessment/data/product_groups_monthly.xlsx" \
+  http://127.0.0.1:5000/upload/product_groups
+'''
+
+to get september forecast:
+'''
+curl http://127.0.0.1:5000/forecast/september
+'''
+
+Potential Flow: 
+1. upload "steel_grade_production" this will populate both steel grades and and groups table if they do not already exist
+2. upload "product_groups_monthly"
+3. call the 
 

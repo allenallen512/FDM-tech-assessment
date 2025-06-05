@@ -25,24 +25,22 @@ def upsert_steel_grade(grade_name: str, pg_id: Optional[int] = None) -> int:
     """
     
     result = supabase_client.table("steel_grades").select("id").eq("name", grade_name).limit(1).execute()
+    print("the result from steel_grades is", result)
     if result.data and len(result.data) == 1:
-        # Optionally update product_group_id if it was previously NULL
         existing = result.data[0]
         if pg_id is not None:
-            supabase_client.table("steel_grades")\
-                .update({"product_group_id": pg_id})\
-                .eq("id", existing["id"])\
-                .execute()
+            supabase_client.table("steel_grades").update({"product_group_id": pg_id}).eq("id", existing["id"]).execute()
         return existing["id"]
 
     # Insert new
     payload = {"name": grade_name, "product_group_id": pg_id}
-    ins = supabase_client.table("steel_grades").insert(payload).execute()
-    return ins.data[0]["id"]
+    insert_response = supabase_client.table("steel_grades").insert(payload).execute()
+    print("the return from insert is", insert_response)
+    return insert_response.data[0]["id"]
 
 
 def detect_month_columns(df):
-    """Identify columns that represent months."""
+    """finds columns that represent months."""
     month_cols = []
     for col in df.columns:
         if col in ['Quality group', 'Grade'] or str(col).startswith('Unnamed'): #skipping the empty columns also
@@ -61,7 +59,7 @@ def detect_month_columns(df):
     return month_cols
 
 def process_production_data(df, month_cols):
-    """Process dataframe and extract production records."""
+    """intakes dataframe and returns list of dicts"""
     records = []
     for idx, row in df.iterrows():
         product_group = row['Quality group']
@@ -69,7 +67,7 @@ def process_production_data(df, month_cols):
         
         for col in month_cols:
             # Get tonnage value (skip zero/missing values)
-            tons = float(row[col]) if not pd.isna(row[col]) else 0.0
+            tons = float(row[col])
             if tons > 0:
                 records.append({
                     'Date': col if isinstance(col, pd.Timestamp) else None,
@@ -82,14 +80,14 @@ def process_production_data(df, month_cols):
     return records
 
 def save_to_steel_grade_production(records):
+    #save to steel_grade_production table. 
+    #reading in something thats in a df format
     for record in records:
         # insert prod group if it doesn't exist
         pg_id = upsert_product_group(record['ProductGroup'])
         # insert steel grade if it doesn't exist, and product group
         grade_id = upsert_steel_grade(record['SteelGrade'], pg_id)
         
-        # Upsert into steel_grade_production
-        # Use the original column name for simplicity
         supabase_client.table("steel_grade_production")\
             .upsert({
                 "year_month": record['MonthCol'],  # Keep original column name
@@ -110,12 +108,12 @@ def process_product_group_data(df, month_cols):
             continue
             
         for col in month_cols:
-            # Get heats value
             heats = float(row[col]) if not pd.isna(row[col]) else 0.0
             if heats > 0:
                 records.append({
                     'ProductGroup': product_group,
                     'MonthCol': str(col),
+                    'Tons': heats * 100.0,  # Assuming 100 tons per heat
                     'Heats': heats
                 })
     
